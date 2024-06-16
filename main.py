@@ -1,11 +1,11 @@
 import asyncio
-from user import Users
+from script import Script
 from config import check_config, config_watch, config_modified
 
 
 async def init():
     config = check_config('config.json')
-    users = Users(**config)
+    users = Script(**config)
     watcher_task = asyncio.create_task(config_watch('.', config_modified,users))
     run_task = asyncio.create_task(users.run())
 
