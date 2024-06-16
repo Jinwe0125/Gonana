@@ -33,5 +33,7 @@ class User:
                 pass
             except PyGetWindowException:
                 pass
+            except pyautogui.FailSafeException:
+                pass
             finally:
                 await asyncio.sleep(loop_wait)
