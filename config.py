@@ -30,16 +30,6 @@ async def config_watch(path, callback, users):
     observer.join()
 
 
-async def main():
-    path_to_watch = '.'
-    watcher_task = asyncio.create_task(config_watch(path_to_watch, config_modified))
-    try:
-        await watcher_task
-    except KeyboardInterrupt:
-        watcher_task.cancel()
-        await watcher_task
-
-
 async def config_modified(path, users):
     config = read_config(path)
     await users.update_config(config)
@@ -48,8 +38,6 @@ async def config_modified(path, users):
 def read_config(path):
     with open(path, 'r') as file:
         config = json.load(file)
-    config["users_path"] = config["steam_root_path"] + "\\config\\loginusers.vdf"
-    config["steam_path"] = config["steam_root_path"] + "\\steam.exe"
     return config
 
 
@@ -57,12 +45,7 @@ def check_config(filename):
     current_directory = os.getcwd()
     file_path = os.path.join(current_directory, filename)
     if not os.path.exists(file_path):
-        steam_path = input("please enter your steam root path: ")
-        banana_path = input("please enter your banana path: ")
         with open('./config.json', 'w') as file:
             file.write(json.dumps(
-                {"steam_root_path": steam_path, "banana_path": banana_path, "gap_time": 3600, "click_time": 10,
-                 "loop_wait_time": 1}, indent=4, ensure_ascii=False))
+                {"gap_time": 3600, "click_time": 10, "loop_wait_time": 1}, indent=4, ensure_ascii=False))
     return read_config('./config.json')
-
-
